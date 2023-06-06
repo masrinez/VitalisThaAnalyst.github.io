@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="hazard.jpg">
+  <script src="calculate.js"></script>
+  <title>Diabetes Risk Assessment</title>
+</head>
+<body>
+  <div class="container">
+    <h1 style="color:#004080;text-align:center; background-color:#9900EF; border:2px solid DodgerBlue;">Diabetes Risk Assessment</h1>
+    <form id="health_risk_assessment_form" method="post" action="submit.php">
+      <p>Please provide the following information for the health risk assessment:</p><br>
+      <div class="form-group">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" size="40" placeholder="Enter your name" required><br>
+      </div><br>
+      <div class="form-group">
+        <label for="phone">Phone Number:</label><br>
+        <input type="tel" name="phone" id="phone" size="20" placeholder="Enter your phone number" required>
+      </div><br>
+      <div class="form-group">
+        <label for="email">Email:</label><br>
+        <input type="email" name="email" id="email" size="40" placeholder="Enter your email address" required>
+      </div><br>
+      <div class="form-group">
+        <label for="gender">Gender:</label><br>
+        <select name="gender" id="gender" required>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div><br>
+      <div class="form-group">
+        <label for="dob">Date of Birth:</label><br>
+        <input type="date" name="dob" id="dob" required>
+      </div><br>
+      <div class="radio-inline">
+        <p><i>Please complete the form. Choose an option for each question</i><em>*</em></p>
+        <fieldset>
+          <legend>Questions</legend><br>
+          <!-- How old are you? -->
+          <span>
+            <label for="age">How old are you?</label><br><br>
+            <input type="radio" value="5" name="age" id="0-25" checked><label for="0-25">0-25</label>
+            <input type="radio" value="10" name="age" id="26-40"><label for="26-40">26-40</label>
+            <input type="radio" value="15" name="age" id="41-60"><label for="41-60">41-60</label>
+            <input type="radio" value="20" name="age" id="60+"><label for="60+">60+</label><br>
+          </span><br>
+          <!-- What is your BMI? -->
+          <span>
+            <label for="bmi">What is your BMI?</label><br><br>
+            <input type="radio" value="5" name="bmi" id="0-25" checked><label for="0-25">0-25</label>
+            <input type="radio" value="10" name="bmi" id="26-30"><label for="26-30">26-30</label>
+            <input type="radio" value="15" name="bmi" id="31-35"><label for="31-35">31-35</label>
+            <input type="radio" value="20" name="bmi" id="35+"><label for="35+">35+</label><br>
+          </span><br>
+          <!-- Does anybody in your family have diabetes? -->
+          <span>
+            <label for="genetics">Does anybody in your family have diabetes?</label><br><br>
+            <input type="radio" value="0" name="genetics" id="No" checked><label for="no">No.</label>
+            <input type="radio" value="7" name="genetics" id="grandparent"><label for="grandparent">Grandparent</label>
+            <input type="radio" value="15" name="genetics" id="sibling"><label for="sibling">Sibling</label>
+            <input type="radio" value="20" name="genetics" id="parent"><label for="parent">Parent</label><br>
+          </span><br>
+          <!-- How would you describe your diet? -->
+          <span>
+            <label for="diet">How would you describe your diet?</label><br><br>
+            <input type="radio" value="5" name="diet" id="low-sugar" checked><label for="low-sugar">Low-sugar</label>
+            <input type="radio" value="10" name="diet" id="normal-sugar"><label for="normal-sugar">Normal sugar</label>
+            <input type="radio" value="15" name="diet" id="quite-high-sugar"><label for="quite-high-sugar">Quite high sugar</label>
+            <input type="radio" value="20" name="diet" id="high-sugar"><label for="high-sugar">High sugar</label>
+            <input type="radio" value="25" name="diet" id="extremely-high-sugar"><label for="extremely-high-sugar">Extremely high sugar</label><br>
+          </span><br>
+        </fieldset><br>
+      </div>
+      <div class="form-group">
+        <label for="result">Result:</label><br>
+        <input type="text" id="result" name="result" size="30" readonly><br>
+      </div><br>
+      <!-- Risk Levels -->
+      <div class="form-group">
+        <label for="risk-level">Risk Level:</label><br>
+        <input type="text" id="risk-level" name="risk-level" size="80" readonly><br>
+      </div><br>
+      <!-- Calculate -->
+      <p><input type="button" value="Calculate" id="calculate" onclick="displayMessage()"></p><br>
+      <input type="submit" value="Submit" class="btn btn-primary">
+      <input type="reset" value="Reset" class="btn btn-secondary">
+    </form>
+  </div>
+  <script>
+    function displayMessage() {
+      var ageValue = document.querySelector('input[name="age"]:checked').value;
+      var bmiValue = document.querySelector('input[name="bmi"]:checked').value;
+      var geneticsValue = document.querySelector('input[name="genetics"]:checked').value;
+      var dietValue = document.querySelector('input[name="diet"]:checked').value;
+      var totalScore = parseInt(ageValue) + parseInt(bmiValue) + parseInt(geneticsValue) + parseInt(dietValue);
+      var message = "Your diabetes risk score is: " + totalScore;
+      document.getElementById("result").value = message;
+      // Set risk level
+      var riskLevel = "";
+      if (totalScore >= 0 && totalScore <= 24) {
+        riskLevel = "Low Risk";
+      } else if (totalScore >= 25 && totalScore <= 49) {
+        riskLevel = "Medium Risk";
+      } else if (totalScore >= 50 && totalScore <= 74) {
+        riskLevel = "High Risk";
+      } else if (totalScore >= 75 && totalScore <= 100) {
+        riskLevel = "Extremely High Risk";
+      }
+      document.getElementById("risk-level").value = riskLevel + ". " + "If the risk factor is greater than 50 to 60, please consult your physician.";
+    }
+  </script>
+</body>
+</html>
